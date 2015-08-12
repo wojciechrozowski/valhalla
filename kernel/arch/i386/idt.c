@@ -55,7 +55,7 @@ void init_idt()
 	idt_set_gate(32, (uint32_t)irq0, 0x08, 0x8E);
 	idt_set_gate(33, (uint32_t)irq1, 0x08, 0x8E);
 	idt_flush((uint32_t)&idt_ptr);
-	init_msg("setting IDT");
+
 }
 
 void idt_set_gate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
@@ -105,7 +105,7 @@ void irq_remap()
 	outb(0xA1, 0x01);
 	outb(0x21, 0x0);
 	outb(0xA1, 0x0);
-	init_msg("PIC remap  ");
+
 
 }
 

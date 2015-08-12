@@ -21,6 +21,9 @@
 
 #ifndef kprintf_h
 #define kprintf_h
+
+
 void kprintf (const char *format, ...);
 void printklog (const char *format, ...);
+
 #endif

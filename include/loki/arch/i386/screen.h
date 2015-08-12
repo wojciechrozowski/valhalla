@@ -50,6 +50,5 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y);
 void putch(char c);
 void puts(const char* data);
 void scroll();
-void init_msg(char *s);
 
 #endif

@@ -65,9 +65,10 @@ uint32_t bootstrap_stack_end = (uint32_t)&_BOOTSTRAP_STACK_END_;
 
 void kernel_main(unsigned long magic, unsigned long addr)
 {
-	init_debug();
-	printklog("loki 0.01 debug \n");
+
 	multiboot_info_t *mbi;
+	terminal_initialize();
+	init_debug();
 	if (magic != 0x2BADB002)
 	{
 		panic("booted by non multiboot loader!");
@@ -100,19 +101,18 @@ void kernel_main(unsigned long magic, unsigned long addr)
 		printklog ("%u KB of memory detected\n", (unsigned) mem_all);
 	}
 
-	printklog("MEMORY SECTIONS MAP:\n");
-	printklog("multiboot:\n\tstart: 0x%x\n\tend: 0x%x\n", (uint32_t) multiboot_start, (uint32_t) multiboot_end);
-	printklog("text:\n\tstart: 0x%x\n\tend: 0x%x\n", (uint32_t) text_start, (uint32_t) text_end);
-	printklog("rodata:\n\tstart: 0x%x\n\tend: 0x%x\n", (uint32_t) rodata_start, (uint32_t) rodata_end);
-	printklog("data:\n\tstart: 0x%x\n\tend: 0x%x\n", (uint32_t) data_start, (uint32_t) data_end);
-	printklog("common:\n\tstart: 0x%x\n\tend: 0x%x\n", (uint32_t) common_start, (uint32_t) common_end);
-	printklog("bss:\n\tstart: 0x%x\n\tend: 0x%x\n", (uint32_t) bss_start, (uint32_t) bss_end);
-	printklog("bootstrap_stack:\n\tstart: 0x%x\n\tend: 0x%x\n", (uint32_t) bootstrap_stack_start, (uint32_t)bootstrap_stack_end);
+	kprintf("head:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) multiboot_start, (uint32_t) multiboot_end);
+	kprintf("text:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) text_start, (uint32_t) text_end);
+	kprintf("rodata:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) rodata_start, (uint32_t) rodata_end);
+	kprintf("data:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) data_start, (uint32_t) data_end);
+	kprintf("common:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) common_start, (uint32_t) common_end);
+	kprintf("bss:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) bss_start, (uint32_t) bss_end);
+	kprintf("stack:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) bootstrap_stack_start, (uint32_t)bootstrap_stack_end);
 
 	if (CHECK_FLAG (mbi->flags, 5))
 	{
 		multiboot_elf_section_header_table_t *multiboot_elf_sec = &(mbi->u.elf_sec);
-		printklog("multiboot_elf_sec:\n\tstart: 0x%x\n\tend: 0x%x\n", (uint32_t) multiboot_elf_sec->addr, (uint32_t) (multiboot_elf_sec->addr + multiboot_elf_sec->size));
+		kprintf("elf:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) multiboot_elf_sec->addr, (uint32_t) (multiboot_elf_sec->addr + multiboot_elf_sec->size));
 		elf_sec_end = multiboot_elf_sec->addr + multiboot_elf_sec->size;
 	}
 
@@ -122,7 +122,7 @@ void kernel_main(unsigned long magic, unsigned long addr)
 		mod = (multiboot_module_t *) mbi->mods_addr;
 		for(uint32_t i=0;i<mbi->mods_count;i++)
 		{
-			printklog ("module 0x%x:\n\tstart: 0x%x\n\tend: 0x%x\n",(uint32_t) (i+1), (uint32_t) mod->mod_start,(uint32_t) mod->mod_end);
+			kprintf ("m 0x%x:\tstart: 0x%x\tend: 0x%x\n",(uint32_t) (i+1), (uint32_t) mod->mod_start,(uint32_t) mod->mod_end);
 			modules[i].start = (uint32_t) mod->mod_start;
 			modules[i].end = (uint32_t) mod->mod_end;
 			mod++;
@@ -131,33 +131,31 @@ void kernel_main(unsigned long magic, unsigned long addr)
 	printklog("\n");
 	if(mbi->mods_count>0)
 	{
-		printklog("Last module end address: 0x%x\n", (uint32_t) modules[(mbi->mods_count)-1].end);
+		kprintf("end: \t addr: 0x%x\n", (uint32_t) modules[(mbi->mods_count)-1].end);
 		placement_address = modules[(mbi->mods_count)-1].end;
 		kernel_end = modules[(mbi->mods_count)-1].end + 0x1000;
 
 	}
 	else
 	{
-		printklog("Last section end address: 0x%x\n", (uint32_t) elf_sec_end);
-		placement_address = elf_sec_end;
+		kprintf("end: \t addr: 0x%x\n", (uint32_t) elf_sec_end);
+
 		kernel_end = elf_sec_end + 0x1000;
 	}
-//poni¿sze linie kodu powinne byc w paging.c
-	kernel_end = kernel_end - (kernel_end%0x1000);
-	printklog("Kheap start address is 0x%x\n", (uint32_t) kernel_end);
-//do t¹d
-	terminal_initialize();
+
+	kernel_end = kernel_end - (kernel_end%0x1000) - 0x1000;
+	kprintf("lastp: \t addr: 0x%x\n", (uint32_t) kernel_end);
 
 
-	puts("loki 0.01-dev starting...\n");
+
+
+
 	init_gdt();
 	irq_remap();
 	init_idt();
-	//init_paging();
-	//init_timer(20);
-	//init_multitasking();
 
-//asm ("cli");
+
+	asm ("cli");
 	asm ("sti");
 
 

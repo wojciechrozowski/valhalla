@@ -57,11 +57,13 @@ void kprintf (const char *format, ...)
 					while (*p)
 					{
 						putch (*p++);
+
 					}
 				break;
 
 				default:
 					putch (*((int *) arg++));
+
 					break;
 			}
 		}
@@ -115,3 +117,5 @@ void printklog (const char *format, ...)
 		}
 	}
 }
+
+

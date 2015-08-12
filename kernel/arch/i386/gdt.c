@@ -44,7 +44,6 @@ void init_gdt()
 
 
 	gdt_flush((uint32_t)&gdt_ptr);
-	init_msg("setting GDT");
 }
 
 void gdt_set_gate(int32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran)

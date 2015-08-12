@@ -148,12 +148,4 @@ void scroll()
 
 }
 
-void init_msg(char *s)
-{
-
-	kprintf("[kernel init] %s ", s);
-	terminal_setcolor(make_color(COLOR_GREEN, COLOR_BLACK));
-	kprintf("[OK]\n");
-	terminal_setcolor(make_color(COLOR_LIGHT_GREY, COLOR_BLACK));
-}
 

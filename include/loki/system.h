@@ -39,7 +39,6 @@
 #include <loki/arch/i386/io.h>
 #include <loki/arch/i386/screen.h>
 #include <loki/arch/i386/serial_debug.h>
-#include <loki/arch/i386/paging.h>
 #include <loki/arch/i386/timer.h>
 
 //#include <loki/arch/i386/thread.h>

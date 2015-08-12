@@ -1,0 +1,5 @@
+timeout=0
+default=0
+title Loki 0.01-dev
+kernel /boot/kernel.elf
+module /boot/module.elf

@@ -153,7 +153,7 @@ void kernel_main(unsigned long magic, unsigned long addr)
 	init_gdt();
 	irq_remap();
 	init_idt();
-	init_paging();
+	//init_paging();
 	//init_timer(20);
 	//init_multitasking();
 

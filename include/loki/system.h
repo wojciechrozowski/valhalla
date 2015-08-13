@@ -32,16 +32,15 @@
 
 //#include <liballoc.h>
 
-#ifdef i386
 
-#include <loki/arch/i386/gdt.h>
-#include <loki/arch/i386/idt.h>
-#include <loki/arch/i386/io.h>
-#include <loki/arch/i386/screen.h>
-#include <loki/arch/i386/serial_debug.h>
-#include <loki/arch/i386/timer.h>
+#include <loki/gdt.h>
+#include <loki/idt.h>
+#include <loki/io.h>
+#include <loki/screen.h>
+#include <loki/serial_debug.h>
+#include <loki/timer.h>
 
-#include <loki/arch/i386/vmm.h>
+#include <loki/vmm.h>
 
 
 uint32_t kernel_end, end;
@@ -54,12 +53,6 @@ typedef struct module
 module_t modules[255];
 
 uint32_t lower, upper, mem_all;
-
-#endif
-
-#ifdef arm
-//#include <loki/arch/arm/watchdog.h>
-#endif
 
 
 #endif

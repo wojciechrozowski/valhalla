@@ -100,7 +100,7 @@ void kernel_main(unsigned long magic, unsigned long addr)
 		mem_all = mbi->mem_lower + mbi->mem_upper + 512 + 1;
 		printklog ("%u KB of memory detected\n", (unsigned) mem_all);
 	}
-
+	kprintf("start:\t addr: 0x100000\n");
 	kprintf("head:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) multiboot_start, (uint32_t) multiboot_end);
 	kprintf("text:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) text_start, (uint32_t) text_end);
 	kprintf("rodata:\tstart: 0x%x\tend: 0x%x\n", (uint32_t) rodata_start, (uint32_t) rodata_end);
@@ -132,7 +132,6 @@ void kernel_main(unsigned long magic, unsigned long addr)
 	if(mbi->mods_count>0)
 	{
 		kprintf("end: \t addr: 0x%x\n", (uint32_t) modules[(mbi->mods_count)-1].end);
-		placement_address = modules[(mbi->mods_count)-1].end;
 		kernel_end = modules[(mbi->mods_count)-1].end + 0x1000;
 
 	}
@@ -143,16 +142,13 @@ void kernel_main(unsigned long magic, unsigned long addr)
 		kernel_end = elf_sec_end + 0x1000;
 	}
 
-	kernel_end = kernel_end - (kernel_end%0x1000) - 0x1000;
-	kprintf("lastp: \t addr: 0x%x\n", (uint32_t) kernel_end);
-
-
-
-
+	kernel_end = kernel_end - (kernel_end%0x1000);
+	kprintf("kend: \t addr: 0x%x\n", (uint32_t) kernel_end);
 
 	init_gdt();
 	irq_remap();
 	init_idt();
+	init_vmm();
 
 
 	asm ("cli");

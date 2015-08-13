@@ -41,11 +41,10 @@
 #include <loki/arch/i386/serial_debug.h>
 #include <loki/arch/i386/timer.h>
 
-//#include <loki/arch/i386/thread.h>
+#include <loki/arch/i386/vmm.h>
 
 
-
-uint32_t kernel_end, placement_address;
+uint32_t kernel_end, end;
 
 typedef struct module
 {

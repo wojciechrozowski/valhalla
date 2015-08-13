@@ -1,17 +1,15 @@
-ARCH     ?=$(shell conf/arch.sh)
 TARGET   ?=$(shell conf/target.sh)
-PROJDIR  ?=arch/$(ARCH)
-LINKER   ?= $(PROJDIR)/link.ld
-SRCFILES := $(shell find . $(PROJDIR) -maxdepth 1 -type f -name "*.c" -o -name "*.S")
+LINKER   ?= link.ld
+SRCFILES := $(shell find . -maxdepth 1 -type f -name "*.c" -o -name "*.S")
 OBJECTS  :=$(SRCFILES:.c=.o)
 OBJECTS  :=$(OBJECTS:.S=.o) 
 OBJECTS  := $(OBJECTS)
 AS       :=$(TARGET)-as
 CC       :=$(TARGET)-gcc
 LD       :=$(TARGET)-gcc
-EM       :=qemu-system-$(ARCH)
+EM       :=qemu-system-i386
 ASFLAGS  := 
-CFLAGS   := -std=gnu99 -ffreestanding -O2 -Wall  -Wextra -nostdlib -lgcc -D$(ARCH) -I../include -DDEBUG
+CFLAGS   := -std=gnu99 -ffreestanding -O2 -Wall  -Wextra -nostdlib -lgcc -I../include -DDEBUG
 LDFLAGS  :=-ffreestanding -O2 -nostdlib -lgcc
 
 
